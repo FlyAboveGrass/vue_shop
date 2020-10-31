@@ -20,5 +20,12 @@ const routes = [
 const router = new VueRouter({
     routes
 })
-
+// 路由导航守卫，如果没有token值，说明没有登录，那么跳转到登录页
+router.beforeEach((to, from, next) => {
+    console.log('to, from', to, from);
+    if(to.path !== '/login' && !window.sessionStorage.getItem('token')){
+        return next('/login')
+    }
+    next()
+})
 export default router
