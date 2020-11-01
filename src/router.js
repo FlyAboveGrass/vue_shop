@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from './components/login.vue'
 import Home from './components/home/home.vue'
+import Users from './components/users/users.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,14 @@ const routes = [
         path: '/login',
         component: Login
     },
-    { path: '/home', component: Home }
+    { 
+        path: '/home', 
+        component: Home,
+        redirect: '/users',
+        children: [
+            { path: '/users', component: Users}
+        ]
+    },
 ]
 
 const router = new VueRouter({
@@ -22,7 +30,6 @@ const router = new VueRouter({
 })
 // 路由导航守卫，如果没有token值，说明没有登录，那么跳转到登录页
 router.beforeEach((to, from, next) => {
-    console.log('to, from', to, from);
     if(to.path !== '/login' && !window.sessionStorage.getItem('token')){
         return next('/login')
     }

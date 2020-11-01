@@ -5,6 +5,7 @@ import store from './store'
 import './plugins/element.js'
 
 import './assets/css/global.css'
+import './assets/font/iconfont.css'
 import axios from 'axios';
 
 
@@ -13,7 +14,6 @@ Vue.config.productionTip = false
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/';
 // axios拦截器，为请求添加token
 axios.interceptors.request.use(config => {
-  console.log('config', config);
   config.headers.Authorization = window.sessionStorage.getItem('token');
   // 必须返回config
   return config;
