@@ -82,7 +82,7 @@ export default {
                 }
                 this.menuList = res.data.data;
             }).then(() => {
-                this.menuPath = window.sessionStorage.getItem('menuPath');
+                this.menuPath = window.sessionStorage.getItem('menuPath') || '/users';
             });
         },
         logout(){

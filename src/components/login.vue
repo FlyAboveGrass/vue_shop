@@ -74,7 +74,7 @@ export default {
     position: relative;
     height: 100%;
     width: 100%;
-    background: url(/img/login-bg.789893d7.jpg) center center no-repeat;
+    background: url(../assets/img/login-bg.jpg) center center no-repeat;
     background-size: cover;
   }
   .login-box{
