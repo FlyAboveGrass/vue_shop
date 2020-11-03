@@ -75,8 +75,8 @@
                             label="操作"
                             align="center">
                             <template slot-scope="scope">
-                                <el-button type="primary" size="mini" icon="el-icon-edit"></el-button>
-                                <el-button type="primary" size="mini" icon="el-icon-delete"></el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-edit" @click="editUser(scope.row.id)"></el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row.id)"></el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-setting"></el-button>
                             </template>
                         </el-table-column>
@@ -94,8 +94,9 @@
             </el-pagination>
         </el-card>
 
+        <!-- 添加user的dialog -->
         <el-dialog
-            title="提示"
+            title="新用户添加"
             :visible.sync="addUserDialog"
             width="30%"
             :before-close="hideAddUser"
@@ -120,6 +121,33 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="hideAddUser()">取 消</el-button>
                 <el-button type="primary" @click="addUser()">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 编辑用户的dialog -->
+        <el-dialog
+            title="编辑用户"
+            :visible.sync="editUserDialog"
+            width="30%"
+            :before-close="hideEditUser"
+        >
+            <div>
+                <el-form label-position="left" label-width="80px" ref="editUserRef" :model="editUserMsg" :rules="addUserRules">
+                    <el-form-item label="用户名" prop="username">
+                        <el-input v-model="editUserMsg.username" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                        <el-input v-model="editUserMsg.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号" prop="mobile">
+                        <el-input v-model="editUserMsg.mobile"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="hideEditUser()">取 消</el-button>
+                <el-button type="primary" @click="submitUserInfo()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -180,7 +208,13 @@ export default {
                     { required: true, message: '手机号不能为空', trigger: 'blur'},
                     { validator: validateMobile, trigger: 'blur' }
                 ]
-            }
+            },
+            editUserDialog: false,
+            editUserMsg: { // 编辑用户的表单信息
+                username: '',
+                email: '',
+                mobile: ''
+            },
         }
     },
     created(){
@@ -191,7 +225,6 @@ export default {
             this.$http.get('/users', {
                 params: this.queryInfo
             }).then((res) => {
-                console.log('table data', res);
                 const Data = res.data;
                 if(res.status === 200) {
                     this.total = Data.data.total;
@@ -219,15 +252,14 @@ export default {
         },
         // 关闭添加用户dialog
         hideAddUser(){
-            console.log(this.$refs)
             this.$refs.addUserRef.resetFields();
             this.addUserDialog = false;
         },
+        // 添加用户
         addUser(){
             this.$refs.addUserRef.validate(result => {
                 if(!result) return;
                 this.$http.post('/users', this.addUserMsg).then(res => {
-                    console.log('addUser -> res', res);
                     if(res.data.meta.status !== 201){
                         return this.$message.success('添加用户失败，请重试！');
                     }
@@ -235,6 +267,74 @@ export default {
                     this.hideAddUser();
                     this.getTableData();
                 })
+            })
+        },
+        // 编辑用户dialog显示
+        editUser(userId){
+            this.editUserDialog = true;
+            this.$http.get(`users/${userId}`).then(res => {
+                console.log('edit diaolo', res)
+                if(res.data && res.data.meta.status === 200){
+                    this.editUserMsg = res.data.data;
+                }else{
+                    this.$message.error('用户数据获取失败！');
+                    this.editUserDialog = false;
+                    return ;
+                }
+            })
+        },
+        // 隐藏编辑框
+        hideEditUser(){
+            console.log(this.$refs)
+            this.$refs.editUserRef.resetFields();
+            this.editUserDialog = false;
+        },
+        // 提交编辑后的用户信息
+        submitUserInfo(){
+            this.$refs.editUserRef.validate(result => {
+                if(!result){
+                    this.$message.error('表单验证未通过')
+                    return ;
+                }
+                this.$http.put(`users/${this.editUserMsg.id}`, this.editUserMsg).then(res => {
+                    console.log('edit result ', res);
+                    if(res.data && res.data.meta.status === 200){
+                        this.editUserDialog = false;
+                        this.getTableData();
+                        this.$message.info('更新用户信息成功')
+                        return ;
+                    }
+
+                    this.$message.error('更新用户信息失败')
+                })
+            })
+        },
+        // 删除某一用户
+        deleteUser(userId){
+            if(userId === 500){
+                this.$message.warning('不能删除超级管理员');
+                return ;
+            }
+            this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$http.delete(`users/${userId}`).then(res => {
+                    console.log('delete res', res);
+                    if(res.data && res.data.meta.status === 200){
+                        this.$message.info('删除成功');
+                        this.queryInfo.pagenum = 1;
+                        this.getTableData();
+                        return ;
+                    }
+                    this.$message.info('删除失败');
+                }).catch(err => {
+                    console.log('deleteUser -> err', err);
+                    this.$message.info('服务器异常， 删除失败');
+                })
+            }).catch(err => {
+                
             })
         }
     }
