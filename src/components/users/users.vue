@@ -177,11 +177,11 @@ export default {
             callback();
         };
         return {
-            queryInfo: {
+            queryInfo: { // 查询用户列表参数
                 query: '',
                 pagenum: 1,
                 pagesize: 2,
-            }, // 查询用户列表参数
+            }, 
             usersList: [], // 用户列表
             total: 0, // 用户总数
             addUserDialog: false, // 添加用户对话框是否显示

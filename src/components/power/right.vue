@@ -70,7 +70,6 @@ export default {
     methods: {
         getRightList(){
             this.$http.get('rights/list').then(res => {
-                console.log(res)
                 if(!res.data || res.data.meta.status !== 200){
                     this.$message.info('获取权限列表失败');
                     return ;
