@@ -77,7 +77,7 @@
                             <template slot-scope="scope">
                                 <el-button type="primary" size="mini" icon="el-icon-edit" @click="editUser(scope.row.id)"></el-button>
                                 <el-button type="primary" size="mini" icon="el-icon-delete" @click="deleteUser(scope.row.id)"></el-button>
-                                <el-button type="primary" size="mini" icon="el-icon-setting"></el-button>
+                                <el-button type="primary" size="mini" icon="el-icon-setting" @click="assignRole(scope.row)"></el-button>
                             </template>
                         </el-table-column>
                 </el-table>
@@ -150,6 +150,31 @@
                 <el-button type="primary" @click="submitUserInfo()">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 分配用户权限的dialog -->
+        <el-dialog
+            title="分配权限"
+            :visible.sync="assignRightDialog"
+            width="30%"
+            :before-close="hideAssignRightDialog"
+        >
+            <div>
+                <p>用户名: {{userInfo.username}}</p>
+                <p>用户名: {{userInfo.role_name}}</p>
+                <div class="demo-input-suffix">
+                    属性方式：
+                    <el-input
+                        placeholder="请选择新角色"
+                        v-model="newRole">
+                    </el-input>
+                </div>
+            </div>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="hideAssignRightDialog()">取 消</el-button>
+                <el-button type="primary" @click="submitUserInfo()">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -215,6 +240,9 @@ export default {
                 email: '',
                 mobile: ''
             },
+            assignRightDialog: false, // 分配权限dialog
+            userInfo: {}, // 当前编辑用户信息
+            newRole: '', // 选中的新角色
         }
     },
     created(){
@@ -336,6 +364,19 @@ export default {
             }).catch(err => {
                 
             })
+        },
+        // 展示分配角色dialog
+        assignRole(user){
+            this.userInfo = user;       
+            this.assignRightDialog = true;
+        },
+        // 分配权限
+        submitUserRole(){
+            
+        },
+        // 关闭分配权限dialog
+        hideAssignRightDialog(){
+            this.assignRightDialog = false;
         }
     }
 }
