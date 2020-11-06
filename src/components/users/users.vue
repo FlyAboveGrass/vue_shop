@@ -343,7 +343,7 @@ export default {
 
 <style lang="less" scoped>
     .el-breadcrumb {
-        font-size: 18px;
+        font-size: 16px;
         line-height: 1;
         margin: 20px;
     }
