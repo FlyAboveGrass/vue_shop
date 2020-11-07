@@ -62,3 +62,19 @@
 [2020-11-06T09:09:41.478] [DEBUG] cheese - admin
 [2020-11-06T09:09:41.481] [DEBUG] cheese - null
 [2020-11-06T09:09:41.482] [DEBUG] cheese - null
+[2020-11-07T12:50:02.301] [DEBUG] cheese - login => username:admin,password:123456
+[2020-11-07T12:50:02.303] [DEBUG] cheese - admin
+[2020-11-07T12:50:02.376] [DEBUG] cheese - null
+[2020-11-07T12:50:02.376] [DEBUG] cheese - null
+[2020-11-07T19:50:21.862] [DEBUG] cheese - login => username:admin,password:123456
+[2020-11-07T19:50:21.875] [DEBUG] cheese - admin
+[2020-11-07T19:50:22.108] [DEBUG] cheese - null
+[2020-11-07T19:50:22.109] [DEBUG] cheese - null
+[2020-11-07T21:58:08.130] [DEBUG] cheese - login => username:admin,password:123456
+[2020-11-07T21:58:08.131] [DEBUG] cheese - admin
+[2020-11-07T21:58:08.134] [DEBUG] cheese - null
+[2020-11-07T21:58:08.134] [DEBUG] cheese - null
+[2020-11-07T22:01:13.449] [DEBUG] cheese - login => username:admin,password:123456
+[2020-11-07T22:01:13.451] [DEBUG] cheese - admin
+[2020-11-07T22:01:13.455] [DEBUG] cheese - null
+[2020-11-07T22:01:13.455] [DEBUG] cheese - null

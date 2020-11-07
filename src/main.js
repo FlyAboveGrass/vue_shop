@@ -7,7 +7,9 @@ import './plugins/element.js'
 import './assets/css/global.css'
 import './assets/font/iconfont.css'
 import axios from 'axios';
+import ZkTable from 'vue-table-with-tree-grid'
 
+Vue.component('tree-table', ZkTable)
 
 Vue.config.productionTip = false
 

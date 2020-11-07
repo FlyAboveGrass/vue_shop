@@ -160,19 +160,23 @@
         >
             <div>
                 <p>用户名: {{userInfo.username}}</p>
-                <p>用户名: {{userInfo.role_name}}</p>
+                <p>角色: {{userInfo.role_name}}</p>
                 <div class="demo-input-suffix">
-                    属性方式：
-                    <el-input
-                        placeholder="请选择新角色"
-                        v-model="newRole">
-                    </el-input>
+                    新角色：
+                    <el-select v-model="newRole" placeholder="请选择">
+                        <el-option
+                            v-for="item in roleList"
+                            :key="item.id"
+                            :label="item.roleName"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
 
             <span slot="footer" class="dialog-footer">
                 <el-button @click="hideAssignRightDialog()">取 消</el-button>
-                <el-button type="primary" @click="submitUserInfo()">确 定</el-button>
+                <el-button type="primary" @click="submitUserRole()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -243,6 +247,7 @@ export default {
             assignRightDialog: false, // 分配权限dialog
             userInfo: {}, // 当前编辑用户信息
             newRole: '', // 选中的新角色
+            roleList: [], // 所有的角色列表
         }
     },
     created(){
@@ -320,7 +325,7 @@ export default {
         // 提交编辑后的用户信息
         submitUserInfo(){
             this.$refs.editUserRef.validate(result => {
-                if(!result){
+                    if(!result){
                     this.$message.error('表单验证未通过')
                     return ;
                 }
@@ -367,12 +372,28 @@ export default {
         },
         // 展示分配角色dialog
         assignRole(user){
-            this.userInfo = user;       
+            this.userInfo = user;
+            this.$http.get('roles').then(res => {
+                if(res.data && res.data.meta.status === 200){
+                    this.roleList = res.data.data;
+                    return ;
+                }
+                this.$message.error('获取角色列表失败');
+            })
             this.assignRightDialog = true;
         },
         // 分配权限
         submitUserRole(){
-            
+            this.$http.put(`users/${this.userInfo.id}/role`, { rid: this.newRole}).then(res => {
+                console.log(res)
+                if(res.data && res.data.meta.status === 200){
+                    this.$message.info('分配权限成功');
+                    this.hideAssignRightDialog();
+                    this.getTableData();
+                    return ;
+                }
+                this.$message.error('分配权限失败');
+            })
         },
         // 关闭分配权限dialog
         hideAssignRightDialog(){
