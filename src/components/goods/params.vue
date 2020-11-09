@@ -38,11 +38,20 @@
                             label="">
                             <template slot-scope="scope">
                                 <div class="dynamic-tag">
-                                    <el-row>
-                                        <el-col v-for="(item, index) of scope.row.attr_vals.split(' ')" :key="index" :xs="12" :sm="12" :md="8" :lg="6" :span="6"  :offset="0">
-                                            <el-tag type="success" size="normal"  effect="dark"  v-if="item">{{item}}</el-tag>
-                                        </el-col>
-                                    </el-row>
+                                    <el-tag type="success" v-for="(item, index) of scope.row.attr_vals" :key="item.cat_id" size="normal"  effect="dark" closable @close="removeParam(index, scope.row)">{{item}}</el-tag>
+                                    <!-- 添加新商品tag -->
+                                    <el-input
+                                        class="input-new-tag"
+                                        v-if="!scope.row.showTag"   
+                                        v-model="scope.row.newTag"
+                                        ref="saveTagInput"
+                                        size="small"
+                                        @keyup.enter.native="saveParamConfirm(scope.row)"
+                                        @blur="hideAddParamInput(scope.row)"
+                                    >
+                                        <el-button slot="append" icon="el-icon-plus" @click="saveParamConfirm(scope.row)" type="primary"></el-button>
+                                    </el-input>
+                                    <el-button v-if="scope.row.showTag" class="button-new-tag" size="small" @click="showAddParamInput(scope.row)">添加新商品参数</el-button>
                                 </div>
                             </template>
                         </el-table-column>
@@ -72,11 +81,25 @@
                             label="">
                             <template slot-scope="scope">
                                 <div class="dynamic-tag">
-                                    <el-row>
-                                        <el-col v-for="(item, index) of scope.row.attr_vals.split(' ')" :key="index" :xs="12" :sm="12" :md="8" :lg="6" :span="6"  :offset="0">
-                                            <el-tag type="success" size="normal"  effect="dark" v-if="item">{{item}}</el-tag>
-                                        </el-col>
-                                    </el-row>
+                                    <el-tag type="success" v-for="(item, index) of scope.row.attr_vals" :key="item.cat_id" size="normal"  effect="dark"
+                                        closable @close="removeParam(index, scope.row)"
+                                    >
+                                        {{item}}
+                                    </el-tag>
+                                    <!-- 添加新商品tag -->
+                                    <el-input
+                                        class="input-new-tag"
+                                        v-if="!scope.row.showTag"
+                                        v-model="scope.row.newTag"
+                                        ref="saveTagInput"
+                                        size="small"
+                                        clearable
+                                        @keyup.enter.native="saveParamConfirm(scope.row)"
+                                        @blur="hideAddParamInput(scope.row)"
+                                    >
+                                        <el-button type="primary" slot="append" icon="el-icon-plus" @click="saveParamConfirm(scope.row)"></el-button>
+                                    </el-input>
+                                    <el-button v-if="scope.row.showTag" class="button-new-tag" size="small" @click="showAddParamInput(scope.row)">添加新商品参数</el-button>
                                 </div>
                             </template>
                         </el-table-column>
@@ -163,7 +186,9 @@ export default {
             editParamsDialog: false,
             editParamsForm: {
                 attr_name: ''
-            }
+            },
+            newParamTag: '', // 添加新的商品参数tag
+            showTag: true
         }
     },
     created() {
@@ -216,7 +241,12 @@ export default {
                     this.$message.error('获取动态数据失败');
                     return ;
                 }
-                this.dynamicTableData = res.data.data
+                res.data.data.forEach(item => {
+                    item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : [];
+                    item.showTag = true;
+                    item.newTag = '';
+                })
+                this.dynamicTableData = res.data.data;
             })
             this.$http.get(`categories/${this.selectCate.slice(2)}/attributes`, {
                 params: { sel: 'only' }
@@ -225,7 +255,12 @@ export default {
                     this.$message.error('获取静态数据失败');
                     return ;
                 }
-                this.staticTableData = res.data.data
+                res.data.data.forEach(item => {
+                    item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : [];
+                    item.showTag = true;
+                    item.newTag = '';
+                })
+                this.staticTableData = res.data.data;
             })
         },
         closeAddParamsDialog(){
@@ -294,9 +329,48 @@ export default {
                 this.$message.success('删除商品参数数据成功');
                 this.getParamsData();
             })
+        },
+        saveParamConfirm(row){
+            if(!row.newTag.trim()){
+                console.log('saveParamConfirm -> row.newTag', row.newTag,row.newTag.trim());
+                row.newTag = '';
+                this.$message.error('输入参数名称不合法！');
+                return ;
+            }   
+            this.saveParamTag(row);
+        },
+        saveParamTag(row) {
+            const attr_vals = row.attr_vals.concat(row.newTag);
+            this.$http.put(`categories/${this.selectedCateId}/attributes/${row.attr_id}`, {
+                attr_name: row.attr_name,
+                attr_sel: row.attr_sel,
+                attr_vals: attr_vals.join(' ')
+            }).then(res => {
+                if(!res.data || res.data.meta.status !== 200){
+                    this.$message.error('添加参数失败！');
+                    row.newTag = '';
+                    row.showTag = true;
+                    return ;
+                }
+                
+                row.attr_vals.push(row.newTag);
+                row.newTag = '';
+            })
+        },
+        showAddParamInput(row){
+            row.showTag = false;
+        },
+        hideAddParamInput(row){
+            row.newTag = '';
+            row.showTag = true;
+        },
+        removeParam(i, row){
+            const deleteParam = row.attr_vals.splice(i, 1);
+            this.saveParamTag(row);
         }
     }
 }
+// todo: 编辑小分类的内容
 </script>
 <style lang="less">
 .warning-tag{
@@ -316,9 +390,9 @@ export default {
     height: 300px;
 }
 .dynamic-tag{
-    .el-col{
+    .el-tag{
         text-align: center;
-        margin: 5px auto;
+        margin: 10px;
     }
 }
 </style>
