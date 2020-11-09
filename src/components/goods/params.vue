@@ -136,7 +136,7 @@
                     </el-form>
                 </div>
                 <span slot="footer">
-                    <el-button @click="closeAddParamsDialog">取消</el-button>
+                    <el-button @click="closeAddParamsDialog()">取消</el-button>
                     <el-button type="primary" @click="addCateParams">确定</el-button>
                 </span>
             </el-dialog>
@@ -146,7 +146,7 @@
                 :title="'编辑' + titleText"
                 :visible.sync="editParamsDialog"
                 width="50%"
-                @close="closeAddParamsDialog()">
+                @close="closeEditParamsDialog()">
                 <div class="add-params">
                     <el-form :model="editParamsForm" ref="editParamsForm" status-icon :rules="addParamsRule" label-width="150px">
                         <el-form-item :label="'编辑' + titleText" prop="attr_name">
@@ -293,9 +293,6 @@ export default {
             this.editParamsDialog = true;
             this.editParamsForm = Object.assign({}, row);
             console.log('showEditDialog -> this.editParamsForm', this.editParamsForm);
-        },
-        closeAddParamsDialog(){
-            this.editParamsDialog = false;
         },
         editCateParams(){
             this.$refs.editParamsForm.validate(result => {
