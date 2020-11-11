@@ -225,6 +225,8 @@ export default {
             console.log(this.selectCate)
             if(this.selectCate.length < 3){
                 this.selectCate = [];
+                this.dynamicTableData = null;
+                this.staticTableData = null;
                 return ;
             }
             this.getParamsData();
