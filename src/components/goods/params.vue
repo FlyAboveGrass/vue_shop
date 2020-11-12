@@ -17,6 +17,7 @@
         </div>
 
         <el-card shadow="always" :body-style="{ padding: '20px',minHeight:'350px' }">
+            <!-- 选择操作分类 -->
             <div class="select-cascader">
                 选择操作的分类：
                 <el-cascader @change="selectedCateChange"

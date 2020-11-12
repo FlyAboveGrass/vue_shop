@@ -4,7 +4,7 @@ import { Button, Form, FormItem, Avatar, Input, Message, Container, Header,
             BreadcrumbItem, Card, Row, Col, Table, TableColumn, Switch, Tooltip, Pagination,
             Dialog, MessageBox, Tag, Tree, Select, Option, Cascader, Alert, Tabs, TabPane,
             Step, Steps, Checkbox, CheckboxGroup, Upload,
-            Timeline, TimelineItem 
+            Timeline, TimelineItem, InputNumber
 } from 'element-ui'
 
 Vue.use(Button)
@@ -49,6 +49,7 @@ Vue.use(CheckboxGroup)
 Vue.use(Upload)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
+Vue.use(InputNumber)
 
 // 将弹框组件全局挂在到Vue原形实例
 Vue.prototype.$message = Message

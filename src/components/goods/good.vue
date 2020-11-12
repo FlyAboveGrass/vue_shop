@@ -144,7 +144,7 @@ export default {
             });
         },
         toAddGoodPage(){
-            this.$router.push('/good/add')
+            this.$router.push('/goods/add')
         },
         handleSizeChange(size){
             this.queryInfo.pagesize = size;
