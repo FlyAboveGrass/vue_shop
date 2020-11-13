@@ -105,7 +105,7 @@
                         { required: true, message: '此项为必填项', trigger: 'blur'},
                     ],
                     goods_cat: [
-                        { required: true, message: '此项为必填项', trigger: 'blur'},
+                        // { required: true, message: '此项为必填项', trigger: 'blur'},
                     ]
                 },
                 progress: '0',
@@ -211,8 +211,7 @@
                 console.log('handleRemove -> this.goodImgList', this.goodImgList);
             },
             addGoods(){
-                this.$refs.addGoodForm.validate(result => {
-                    console.log('addGoods -> result', result);
+                this.$refs.addGoodForm.validate(result => {                    
                     if(!result){
                         this.$message.error('商品信息不完善');
                         // return;
@@ -220,11 +219,7 @@
 
                     let form = JSON.parse(JSON.stringify(this.addGoodForm));
 
-                    form.goods_cat = this.selectCate.join(',');
-                    console.log('addGoods -> this.selectCate', this.selectCate);
-                    console.log('addGoods -> form', form);
-                    
-
+                    form.goods_cat = this.selectCate.join(',');                    
                     // 静态参数和动态参数
                     this.goodParamData.forEach(item => {
                         this.addGoodForm.attrs.push({
@@ -232,26 +227,23 @@
                             attr_value: item.attr_vals.join(',')
                         })
                     })
-                    console.log('this.addGoodForm', this.addGoodForm);
                     this.staticAttr.forEach(item => {
                         this.addGoodForm.attrs.push({
                             attr_id: item.attr_id,
                             attr_value: item.attr_vals
                         })
                     })
-                    console.log('this.addGoodForm', this.addGoodForm);
                     form.attrs = this.addGoodForm.attrs;
 
-                    form.pics = this.goodImgList;
-
-                    // this.$http.post('goods', form).then(res => {
-                    //     if(!res.data.meta || res.data.meta.status !== 201){
-                    //         this.$message.error('添加商品失败');
-                    //         return ;
-                    //     }
-                    //     this.$message.success('添加商品成功!')
-                    //     this.$router.push('/goods')
-                    // })
+                    form.pics = this.goodImgList;                    
+                    this.$http.post('goods', form).then(res => {
+                        if(!res.data.meta || res.data.meta.status !== 201){
+                            this.$message.error('添加商品失败');
+                            return ;
+                        }
+                        this.$message.success('添加商品成功!')
+                        this.$router.push('/goods')
+                    })
                 })
             }
         }
@@ -285,8 +277,12 @@
 
     .quill-editor{
         margin: 30px auto;
-        .ql-container{
-            min-height: 300px;
-        }
     }
+    
+</style>
+<style>
+/* 另外写一个style，让本组件的样式能够影响子组件的样式 */
+.ql-container{
+    min-height: 300px;
+}
 </style>
