@@ -5,7 +5,7 @@
                 <el-col :span="24" :offset="0">
                     <el-card shadow="always" :body-style="{ padding: '20px', margin: '20px auto' }">
                         <div class="china">
-                            <chart class="my-chart" :options="distributionOption"/>
+                            <chart class="my-chart" :autoresize="autoresize" :options="distributionOption"/>
                         </div>
                     </el-card>
                 </el-col>
@@ -13,16 +13,17 @@
             
             <el-row :gutter="20">
                 <el-col :span="12" :offset="0">
-                    <el-card shadow="always" :body-style="{ padding: '20px' }">
+                    <el-card shadow="always">
                         <div class="line" ref="line">
+                            // 第一种方法让echarts图表自适应
                             <chart class="my-chart" :options="lineOption" :autoresize="autoresize" @resize="resizeCharts()"/>
                         </div>
                     </el-card>
                 </el-col>
                 <el-col :span="12" :offset="0">
-                    <el-card shadow="always" :body-style="{ padding: '20px' }">
-                        <div class="line" ref="circle">
-                            <chart class="my-chart" :options="circleOption"/>
+                    <el-card shadow="always">
+                        <div class="line">
+                            <chart ref="circle" class="my-chart"  :options="circleOption"/>
                         </div>
                     </el-card>
                 </el-col>
@@ -54,15 +55,11 @@ export default {
         this.line()
         this.circle()
         this.distribution()
-        
     },
     mounted() {
         window.onresize = () => {
-            this.resizeCharts();
-            this.$refs.line.chart.resize()
-            console.log('mounted -> this.$refs.line', this.$refs.line);
+            this.$refs.circle.chart.resize(); // 第二种方式让echarts图表自适应
         }
-        window.addEventListener('resize', this.resizeCharts())
     },
     methods: {
         // 销售额最高商品
@@ -77,16 +74,16 @@ export default {
                     show: true, 
                     left: 'auto',
                     orient: 'horizontal',
-                    data: ["手机", "口红", "零食", "家居", "3C数码", "日用品"]
+                    data: ["手机", "口红", "零食", "家居", "3C数码"]
                 },
                 xAxis: {
-                    data: ["手机", "口红", "零食", "家居", "3C数码", "日用品"]
+                    data: ["手机", "口红", "零食", "家居", "3C数码"]
                 },
                 yAxis: {},
                 series: [
                     {
                         type: "bar",
-                        data: [2200, 2040, 1906, 1270, 1020, 765]
+                        data: [2200, 2040, 1906, 1270, 1020]
                     }
                 ]
             }
@@ -176,7 +173,7 @@ export default {
                             }
                         },
                         itemStyle: {
-                            areaColor: 'rgb(255,223,51)'
+                            areaColor: '#EBC57F'
                         },
                         emphasis: {
                             itemStyle: {
@@ -222,12 +219,6 @@ export default {
                     }
                 ]
             }
-        },
-        resizeCharts(){
-            console.log('resizeCharts -> resizeCharts');
-            this.lineOption = Object.assign({}, this.lineOption);
-            this.circleOption = Object.assign({}, this.circleOption);
-            this.distributionOption = Object.assign({}, this.distributionOption);
         }
     }
 }
@@ -240,5 +231,8 @@ export default {
 .china{
     display: flex;
     justify-content: center;
+}
+.echarts{
+    width: 100%;
 }
 </style>
