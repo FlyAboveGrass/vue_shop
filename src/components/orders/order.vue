@@ -196,7 +196,6 @@ export default {
                 ],
                 "meta": { "status": 200, "message": "获取物流信息成功！" }
             };
-            console.log('progress -> Data', Data);
             if(Data.meta.status === 200) {
                 this.positionDialog = true;
                 this.position = Data.data;

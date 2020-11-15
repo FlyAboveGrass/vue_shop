@@ -37,6 +37,20 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css' 
 Vue.use(VueQuillEditor, {})
 
+// echarts
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/chart/map'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/polar'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title.js'
+
+import './plugins/china.js' // 引入中国地图文件
+Vue.component('chart', ECharts)
+
 new Vue({
   router,
   store,
