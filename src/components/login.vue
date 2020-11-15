@@ -9,7 +9,8 @@
             <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.userName" placeholder="请输入账号" size="normal" clearable></el-input>
           </el-form-item>
           <el-form-item label-width="0px" prop="password">
-            <el-input prefix-icon="el-icon-key" v-model="loginForm.password" type="password" placeholder="请输入密码" size="normal" clearable></el-input>
+            <!-- elementUI在input的外面加了一个div，所以不能直接绑定键盘事件，要使用.native修饰符 -->
+            <el-input prefix-icon="el-icon-key" v-model="loginForm.password" type="password" placeholder="请输入密码" size="normal" clearable @keyup.enter.native="onSubmit()"></el-input>
           </el-form-item>
           <div class="el-form-item login-btn">
             <el-button type="primary" size="small" :round="true" @click="onSubmit() ">登录</el-button>

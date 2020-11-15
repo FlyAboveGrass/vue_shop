@@ -11,8 +11,7 @@
                 <div slot="header" class="clearfix">
                     <el-row :gutter="20">
                         <el-col :span="16">
-                            <!-- todo: keyup事件未响应 -->
-                            <el-input placeholder="搜索商品" v-model="queryInfo.query" :clearable="true" v-on:keyup.enter="getGoodList()" @clear="getGoodList()">
+                            <el-input placeholder="搜索商品" v-model="queryInfo.query" :clearable="true" @keyup.enter.native="getGoodList()" @clear="getGoodList()">
                                 <el-button slot="append" icon="el-icon-search" @click="getGoodList()"></el-button>
                             </el-input>
                         </el-col>

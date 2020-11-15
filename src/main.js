@@ -24,7 +24,6 @@ Vue.prototype.$http = axios;
 
 Vue.filter('timeTransform', function(time){
   const date = new Date(time);
-  console.log('Vue.filter -> Date', Date);
   const day = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDay().toString().padStart(2, '0');
   const second = date.getHours() + ':' + date.getMinutes().toString().padStart(2, '0') + ':' + date.getSeconds().toString().padStart(2, '0');
   return day + ' ' + second;
@@ -49,6 +48,8 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/title.js'
 
 import './plugins/china.js' // 引入中国地图文件
+
+
 Vue.component('chart', ECharts)
 
 new Vue({

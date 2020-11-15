@@ -15,7 +15,7 @@
                 <el-col :span="12" :offset="0">
                     <el-card shadow="always">
                         <div class="line" ref="line">
-                            // 第一种方法让echarts图表自适应
+                            <!-- // 第一种方法让echarts图表自适应 -->
                             <chart class="my-chart" :options="lineOption" :autoresize="autoresize" @resize="resizeCharts()"/>
                         </div>
                     </el-card>
